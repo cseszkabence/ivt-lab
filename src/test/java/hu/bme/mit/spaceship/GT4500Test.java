@@ -48,4 +48,58 @@ public class GT4500Test {
     verify(mockTS2, times(1)).fire(1);
   }
 
+  @Test
+  public void firetorpedo_Alternating(){
+    // Arrange
+    when(mockTS1.fire(1)).thenReturn(true);
+    when(mockTS2.fire(1)).thenReturn(true);
+
+    // Act
+    boolean result1 = ship.fireTorpedo(FiringMode.SINGLE);
+    boolean result2 = ship.fireTorpedo(FiringMode.SINGLE);
+
+    // Assert
+    assertEquals(true, result1);
+    assertEquals(true, result2);
+    verify(mockTS1, times(1)).fire(1);
+    verify(mockTS2, times(1)).fire(1);
+  }
+
+  @Test
+  public void firetorpedo_Alternating_SecondaryEmpty(){
+    // Arrange
+    when(mockTS1.fire(1)).thenReturn(true);
+    when(mockTS1.isEmpty()).thenReturn(false);
+    when(mockTS2.fire(1)).thenReturn(false);
+    when(mockTS2.isEmpty()).thenReturn(true);
+    when(mockTS1.fire(1)).thenReturn(true);
+    when(mockTS1.isEmpty()).thenReturn(false);
+
+    // Act
+    boolean result1 = ship.fireTorpedo(FiringMode.SINGLE);
+    boolean result2 = ship.fireTorpedo(FiringMode.SINGLE);
+
+    // Assert
+    assertEquals(true, result1);
+    assertEquals(false, result2);
+    verify(mockTS1, times(1)).fire(1);
+    verify(mockTS2, times(1)).fire(1);
+  }
+
+  @Test
+  public void firetorpedo_Alternating_PrimaryEmpty(){
+    // Arrange
+    when(mockTS1.fire(1)).thenReturn(false);
+    when(mockTS2.fire(1)).thenReturn(true);
+
+    // Act
+    boolean result1 = ship.fireTorpedo(FiringMode.SINGLE);
+    boolean result2 = ship.fireTorpedo(FiringMode.SINGLE);
+
+    // Assert
+    assertEquals(false, result1);
+    assertEquals(true, result2);
+    verify(mockTS1, times(1)).fire(1);
+    verify(mockTS2, times(1)).fire(1);
+  }
 }
